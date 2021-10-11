@@ -16,31 +16,25 @@ def generatePokemonStats(pokemon):
     pokemon["PV"] = random.randint(0, 15)
     return pokemon
 
-def catchPokemon(pokemon, ball):
+def catchPokemon(pokemon, ball, showSpawnMessage = True):
     randomCatchNumber = random.randint(0, 100)
-    # randomPokemon = random.randint(0, len(dictPokemon) - 1)
-    # print("Un ", dictPokemon[randomPokemon]["name"], "SAUVAGE est apprarue")
-    print("Un ", pokemon["name"], "SAUVAGE est apprarue")
+    if showSpawnMessage == True :
+        print("Un ", pokemon["name"], "SAUVAGE est apprarue")
     pokeBallType = int(input("Choisir le type de PokeBall : "))
     if ball[pokeBallType]["nbInInventory"] > 0 :
-        # tryCatch = ball[pokeBallType]["catchRate"]/(1 +(dictPokemon[randomPokemon]["resistance"]/100))
         tryCatch = ball[pokeBallType]["catchRate"]/(1 +(pokemon["resistance"]/100))
         ball[pokeBallType]["nbInInventory"] -= 1
         if ball[pokeBallType]["name"] == "MasterBall" :
-            # pokemonInventory.append(dictPokemon[randomPokemon])
             pokemonInventory.append(pokemon)      
-            # return print(dictPokemon[randomPokemon]["name"], "capturé avec succès")
             return print(pokemon["name"], "capturé avec succès")
         elif randomCatchNumber <= tryCatch :
-            # pokemonInventory.append(dictPokemon[randomPokemon])
             pokemonInventory.append(pokemon)
-            # return print(dictPokemon[randomPokemon]["name"], "capturé avec succès")
             return print(pokemon["name"], "capturé avec succès")
         else :
             return print("Le pokémon s'est échappé")
     else :
-        print("Vous n'avez plus de", ball[pokeBallType]["name"])
-        catchPokemon(pokemon, ball)
+        print("Vous n'avez pas de", ball[pokeBallType]["name"])
+        catchPokemon(pokemon, ball, False)
     
 
 
@@ -179,7 +173,6 @@ for i in range (0, 1):
     menuChoice = int(input("Appuyer au choix sur : 1-Combattre   2-Capturer   3-Fuir "))
     if menuChoice == 2:
         catchPokemon(pokemon[randomGetIndex], ball)
-    # spawn(pokemon[randomGetIndex].get('name'), pokemon[randomGetIndex].get('percent'))
 
 
 #Update des % de spawn dans le counter
@@ -187,7 +180,6 @@ index = 0
 countNbOfPokemons = Counter(listeOfSpawnedPokemon)
 for element in countNbOfPokemons:
     pokemon[index]['counter'] = (countNbOfPokemons[pokemon[index]['name']]/10000)*100
-    print(pokemon[index])
     index += 1
 
 
