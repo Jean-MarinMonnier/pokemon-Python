@@ -5,10 +5,13 @@ def spawn(pokemonToSpawn):
     randomNumber = random.randint(0, 100)
     if randomNumber <= pokemonToSpawn["percent"]:
         generatePokemonStats(pokemonToSpawn)
-        return listeOfSpawnedPokemon.append(pokemonToSpawn["name"]), pokemonToSpawn
+        print("Un ", pokemonToSpawn["name"], "SAUVAGE est apprarue")
+        listeOfSpawnedPokemon.append(pokemonToSpawn["name"])
+        print("pts", pokemonToSpawn)
+        return pokemonToSpawn
     else :
         randomGetIndex = random.randint(0, len(pokemon)-1)
-        spawn(pokemon[randomGetIndex])
+        return spawn(pokemon[randomGetIndex])
 
 def generatePokemonStats(pokemon):
     pokemon["attaque"] = random.randint(0, 15)
@@ -16,16 +19,18 @@ def generatePokemonStats(pokemon):
     pokemon["PV"] = random.randint(0, 15)
     return pokemon
 
-def catchPokemon(pokemon, ball, showSpawnMessage = True):
+def catchPokemon(pokemon, ball):
     randomCatchNumber = random.randint(0, 100)
-    if showSpawnMessage == True :
-        print("Un ", pokemon["name"], "SAUVAGE est apprarue")
     pokeBallType = int(input("Choisir le type de PokeBall : "))
     if ball[pokeBallType]["nbInInventory"] > 0 :
         tryCatch = ball[pokeBallType]["catchRate"]/(1 +(pokemon["resistance"]/100))
         ball[pokeBallType]["nbInInventory"] -= 1
         if ball[pokeBallType]["name"] == "MasterBall" :
-            pokemonInventory.append(pokemon)      
+            print(len(pokemonInventory))
+            if len(pokemonInventory) < 6 :
+                pokemonInventory.append(pokemon)  
+            else :
+                pokemonStorage.append(pokemon)  
             return print(pokemon["name"], "capturé avec succès")
         elif randomCatchNumber <= tryCatch :
             pokemonInventory.append(pokemon)
@@ -34,15 +39,65 @@ def catchPokemon(pokemon, ball, showSpawnMessage = True):
             return print("Le pokémon s'est échappé")
     else :
         print("Vous n'avez pas de", ball[pokeBallType]["name"])
-        catchPokemon(pokemon, ball, False)
+        catchPokemon(pokemon, ball)
     
+def fight(pokemonInventory, pokemonToAttack, pokedollars) :
+    pokemonToSelect = ""
+    j = 0
+    for element in pokemonInventory:
+        pokemonToSelect += str(j) +" - " + element["name"]
+        j += 1
+    print(pokemonToSelect)
+    pokemonSelected = int(input("Sélectionnez un pokémon dans la liste "))
+    ratio1 = pokemonInventory[pokemonSelected]["attaque"]/pokemonToAttack["defense"]
+    ratio2 = pokemonToAttack["attaque"]/pokemonInventory[pokemonSelected]["defense"]
+    if ratio1 > ratio2 :
+        print("Vous avez gagné !")
+        pokedollars += random.randint(1, 2000)
+    elif ratio2 > ratio1 : 
+        print("Vous avez perdu")
+    else :
+        print("Égalité")
+    print(pokedollars)
+
+
+def addBallToInventory(price, pokeball) :
+    quantity = int(input("Choisir une quantitée"))
+    if quantity*price > pokedollars:
+        print("Vous n'avez pas assez d'argent")
+    else :
+        pokeball["nbInInventory"] += quantity
+
+def shop(pokeball):
+    chosenPokeball = int(input("Séléctionner une Ball à acheter : 1-Pokeball 200$  2-Superball 600$  3-Hyperball 1200$  4-Materball 50000$"))
+    if chosenPokeball == 1 :
+        addBallToInventory(200, pokeball)
+    elif chosenPokeball == 2 :
+        addBallToInventory(600, pokeball)
+    elif chosenPokeball == 3 :
+        addBallToInventory(1200, pokeball)
+    elif chosenPokeball == 4 :
+        addBallToInventory (50000, pokeball)
+    print(pokeball)
 
 
 randomCatchNumber = 0
 randomNumber = 0
 randomGetIndex = 0
 listeOfSpawnedPokemon = []
-pokemonInventory = []
+pokemonInventory = [
+    {
+        "name" : "Salamèche",
+        "percent" : 5,
+        "counter" : 0,
+        "resistance" : 30,
+        "attaque" : 7.5,
+        "defense" : 7.5,
+        "PV" : 7.5
+    }
+]
+pokemonStorage = []
+pokedollars = 10000
 pokemon = [
     {
         "name" : "Pikachu",
@@ -163,17 +218,33 @@ ball = [
     {
         "name" : "MasterBall",
         "catchRate" : 100,
-        "nbInInventory" : 0
+        "nbInInventory" : 7
     }
 ]
 
-for i in range (0, 1):
-    randomGetIndex = random.randint(0, len(pokemon)-1)
-    spawn(pokemon[randomGetIndex])
-    menuChoice = int(input("Appuyer au choix sur : 1-Combattre   2-Capturer   3-Fuir "))
-    if menuChoice == 2:
-        catchPokemon(pokemon[randomGetIndex], ball)
+def mainMenu():
+    action = int(input("Sélectionner l'acion souhaitée : 1- Allez au Shop  2-Afficher l'inventaire  3- Allez chasser du Pokémon"))
+    if action == 1:
+        shop()
 
+def goFindAPokemon() :
+    randomGetIndex = random.randint(0, len(pokemon)-1)
+    print("rgi", randomGetIndex)
+    spawnedPokemon = spawn(pokemon[randomGetIndex])
+    print("sp", spawnedPokemon)
+    menuChoice = int(input("Appuyer au choix sur : 1-Combattre   2-Capturer   3-Fuir "))
+    if menuChoice == 1 :
+        fight(pokemonInventory, spawnedPokemon, pokedollars)
+        print("")
+    elif menuChoice == 2 :
+        catchPokemon(spawnedPokemon, ball)
+    elif menuChoice == 3 : 
+        print("Vous avez fuit")
+        print("")
+        # continue
+    else :
+        print("Touche incorrecte")
+    print("")
 
 #Update des % de spawn dans le counter
 index = 0
