@@ -163,6 +163,8 @@ def mainMenu():
 
 
 #Fonctions Shop
+
+# Séléction de la pokeball à acheter
 def shop(pokeball):
     global pokedollars
     print("Votre solde :", pokedollars)
@@ -178,7 +180,7 @@ def shop(pokeball):
     else :
         print("Touche Incorrecte")
 
-
+# Ajout des pokeballs acheter, mise à jour du pokedollars, vérification si solde suffisant
 def addBallToInventory(price, pokeball) :
     global pokedollars
     quantity = int(input("Choisir une quantité "))
@@ -198,6 +200,8 @@ def addBallToInventory(price, pokeball) :
 
 
 # Fonctions génération, capture, combat pokemon
+
+# On fais spawn un pokemon et on affiche le menu d'action
 def goFindAPokemon() :
     randomGetIndex = random.randint(0, len(pokemon)-1)
     spawnedPokemon = spawn(pokemon[randomGetIndex])
@@ -213,7 +217,7 @@ def goFindAPokemon() :
         print("Touche incorrecte \n")
     mainMenu()
 
-
+#  Prend un pokemon dans le liste, test si il apparait ou non, le retourne si oui
 def spawn(pokemonToSpawn):
     randomNumber = random.randint(0, 100)
     if randomNumber <= pokemonToSpawn["percent"] :
@@ -225,13 +229,14 @@ def spawn(pokemonToSpawn):
         randomGetIndex = random.randint(0, len(pokemon)-1)
         return spawn(pokemon[randomGetIndex])
 
-
+# Genère les stastisitiques d'attaque, de défense et PV du pokemon qui a spawn
 def generatePokemonStats(pokethon):
     pokethon["attaque"] = random.randint(0, 15)
     pokethon["defense"] = random.randint(0, 15)
     pokethon["PV"] = random.randint(0, 15)
     return pokethon
 
+# Gestion du combat entre 1 pokemon de l'inventaire et 1 qui a spawn
 def fight(pokemonInventory, pokemonToAttack) :
     pokemonToSelect = ""
     global pokedollars
@@ -257,7 +262,7 @@ def fight(pokemonInventory, pokemonToAttack) :
         print("Égalité")
         time.sleep(3)
 
-
+# Gestion de la capture du pokemon qui a spawn
 def catchPokemon(pokemon, ball):
     randomCatchNumber = random.randint(0, 100)
     pokeBallType = int(input("Choisir le type de PokeBall :  1-PokeBall   2-SuperBall   3-HyperBall   4-MasterBall "))
@@ -291,6 +296,8 @@ def catchPokemon(pokemon, ball):
 
 
 # Fonction inventaire
+
+# Affichage des éléments de l'inventaire
 def showInventory() :
     pokeBallInfosToShow = ""
     pokemonInventoryInfosToshow = ""
