@@ -139,7 +139,7 @@ ball = [
     {
         "name" : "MasterBall",
         "catchRate" : 100,
-        "nbInInventory" : 0
+        "nbInInventory" : 5
     }
 ]
 
@@ -222,7 +222,7 @@ def spawn(pokemonToSpawn):
     randomNumber = random.randint(0, 100)
     if randomNumber <= pokemonToSpawn["percent"] :
         pokemonToSpawn = generatePokemonStats(pokemonToSpawn)
-        print("Un ", pokemonToSpawn["name"], "SAUVAGE est apprarue")
+        print("Un ", pokemonToSpawn["name"], "SAUVAGE est appraru")
         # listOfSpawnedPokemon.append(pokemonToSpawn["name"])
         return pokemonToSpawn
     else :
